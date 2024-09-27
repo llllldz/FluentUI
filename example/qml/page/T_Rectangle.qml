@@ -3,18 +3,16 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
 import FluentUI 1.0
-import "qrc:///example/qml/component"
 import "../component"
 
 FluScrollablePage{
 
-    title:"Rectangle"
+    title: qsTr("Rectangle")
 
-    FluArea{
+    FluFrame{
         Layout.fillWidth: true
-        Layout.topMargin: 20
-        height: 80
-        paddings: 10
+        Layout.preferredHeight: 80
+        padding: 10
 
         Column{
             spacing: 15
@@ -65,7 +63,7 @@ FluScrollablePage{
     }
     CodeExpander{
         Layout.fillWidth: true
-        Layout.topMargin: -1
+        Layout.topMargin: -6
         code:'FluRectangle{
     radius: [25,25,25,25]
     width: 50

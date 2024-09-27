@@ -3,18 +3,16 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import FluentUI 1.0
-import "qrc:///example/qml/component"
 import "../component"
 
 FluScrollablePage{
 
-    title:"TimePicker"
+    title: qsTr("TimePicker")
     launchMode: FluPageType.SingleInstance
-    FluArea{
+    FluFrame{
         Layout.fillWidth: true
-        Layout.topMargin: 20
-        height: 80
-        paddings: 10
+        Layout.preferredHeight: 80
+        padding: 10
 
         ColumnLayout{
 
@@ -24,11 +22,17 @@ FluScrollablePage{
             }
 
             FluText{
-                text:"hourFormat=FluTimePickerType.H"
+                text: qsTr("hourFormat=FluTimePickerType.H")
             }
 
             FluTimePicker{
                 current: new Date()
+                amText: qsTr("AM")
+                pmText: qsTr("PM")
+                hourText: qsTr("Hour")
+                minuteText: qsTr("Minute")
+                cancelText: qsTr("Cancel")
+                okText: qsTr("OK")
                 onAccepted: {
                     showSuccess(current.toLocaleTimeString(Qt.locale("de_DE")))
                 }
@@ -38,17 +42,17 @@ FluScrollablePage{
     }
     CodeExpander{
         Layout.fillWidth: true
-        Layout.topMargin: -1
+        Layout.topMargin: -6
         code:'FluTimePicker{
 
 }'
     }
 
-    FluArea{
+    FluFrame{
         Layout.fillWidth: true
         Layout.topMargin: 20
-        height: 80
-        paddings: 10
+        Layout.preferredHeight: 80
+        padding: 10
 
         ColumnLayout{
 
@@ -58,11 +62,17 @@ FluScrollablePage{
             }
 
             FluText{
-                text:"hourFormat=FluTimePickerType.HH"
+                text: qsTr("hourFormat=FluTimePickerType.HH")
             }
 
             FluTimePicker{
                 hourFormat:FluTimePickerType.HH
+                amText: qsTr("AM")
+                pmText: qsTr("PM")
+                hourText: qsTr("Hour")
+                minuteText: qsTr("Minute")
+                cancelText: qsTr("Cancel")
+                okText: qsTr("OK")
                 onAccepted: {
                     showSuccess(current.toLocaleTimeString(Qt.locale("de_DE")))
                 }
@@ -72,7 +82,7 @@ FluScrollablePage{
     }
     CodeExpander{
         Layout.fillWidth: true
-        Layout.topMargin: -1
+        Layout.topMargin: -6
         code:'FluTimePicker{
     hourFormat:FluTimePickerType.HH
 }'

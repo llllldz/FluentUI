@@ -2,19 +2,17 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import "qrc:///example/qml/component"
 import "../component"
 import FluentUI 1.0
 
 FluScrollablePage{
 
-    title:"Pagination"
+    title: qsTr("Pagination")
 
-    FluArea{
+    FluFrame{
         Layout.fillWidth: true
-        height: 200
-        paddings: 10
-        Layout.topMargin: 20
+        Layout.preferredHeight: 200
+        padding: 10
         ColumnLayout{
             spacing: 20
             anchors.verticalCenter: parent.verticalCenter
@@ -38,7 +36,7 @@ FluScrollablePage{
     }
     CodeExpander{
         Layout.fillWidth: true
-        Layout.topMargin: -1
+        Layout.topMargin: -6
         code:'FluPagination{
     pageCurrent: 1
     itemCount: 1000

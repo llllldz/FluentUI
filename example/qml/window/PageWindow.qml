@@ -3,7 +3,6 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import FluentUI 1.0
 import example 1.0
-import "qrc:///example/qml/component"
 import "../component"
 
 FluWindow {
@@ -17,9 +16,9 @@ FluWindow {
     onInitArgument:
         (arg)=>{
             window.title = arg.title
-            loader.setSource( arg.url,{animDisabled:true})
+            loader.setSource(arg.url,{animationEnabled:false})
         }
-    Loader{
+    FluLoader{
         id: loader
         anchors.fill: parent
     }

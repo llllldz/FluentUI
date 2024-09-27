@@ -21,8 +21,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12]
-        qt_ver: [6.5.0]
+        os: [macos-latest]
+        qt_ver: [6.6.2]
         qt_arch: [clang_64]
     env:
       targetName: example
@@ -38,7 +38,7 @@ jobs:
           version: ${{ matrix.qt_ver }}
           cache: ${{steps.cache-qt.outputs.cache-hit}}
           arch: ${{ matrix.qt_arch }}
-          modules: 'qt5compat qtmultimedia qtshadertools qtimageformats'
+          modules: 'qt5compat qtmultimedia qtshadertools qtimageformats qt3d'
           
       - name: Set up Ninja
         uses: seanmiddleditch/gha-setup-ninja@v3
@@ -50,17 +50,19 @@ jobs:
           cmake --version
           mkdir build
           cd build
-          cmake -DCMAKE_MESSAGE_LOG_LEVEL=STATUS -DCMAKE_PREFIX_PATH=/Users/runner/work/FluentUI/Qt/6.5.0/macos -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release -GNinja ..
+          cmake -DCMAKE_MESSAGE_LOG_LEVEL=STATUS -DCMAKE_PREFIX_PATH=/Users/runner/work/FluentUI/Qt/${{ matrix.qt_ver }}/macos -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release -GNinja ..
           cmake --build . --target all --config Release --parallel
           
       - name: package
         run: |
+          # 先删除所有dSYM文件，减少包的体积
+          sudo find /Users/runner/work/FluentUI/Qt/${{ matrix.qt_ver }}/macos/qml -name "*.dSYM" | xargs rm -r
           # 拷贝依赖
-          macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg     
+          sudo macdeployqt bin/Release/${targetName}.app -qmldir=. -dmg     
           
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}}.zip
+          name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}}
           path: bin/release/${{ env.targetName }}.app
           
       - name: uploadRelease

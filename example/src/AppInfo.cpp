@@ -1,16 +1,15 @@
 #include "AppInfo.h"
 
 #include <QQmlContext>
-#include <QDebug>
 #include <QGuiApplication>
 #include "Version.h"
 
-AppInfo::AppInfo(QObject *parent)
-    : QObject{parent}
-{
+AppInfo::AppInfo(QObject *parent) : QObject{parent} {
     version(APPLICATION_VERSION);
 }
 
-void AppInfo::init(QQmlApplicationEngine *engine){
-    engine->rootContext();
+
+[[maybe_unused]] void AppInfo::testCrash() {
+    auto *crash = reinterpret_cast<volatile int *>(0);
+    *crash = 0;
 }

@@ -3,16 +3,14 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import FluentUI 1.0
-import "qrc:///example/qml/component"
 import "../component"
 
 FluContentPage{
 
-    title:"Watermark"
+    title: qsTr("Watermark")
 
-    FluArea{
+    FluFrame{
         anchors.fill: parent
-        anchors.topMargin: 20
 
         ColumnLayout{
             anchors{
@@ -24,23 +22,24 @@ FluContentPage{
                 spacing: 10
                 Layout.topMargin: 14
                 FluText{
-                    text:"text:"
+                    text: "text:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluTextBox{
-                    id:text_box
-                    text:"会磨刀的小猪"
+                    id: text_box
+                    text: "会磨刀的小猪"
+                    Layout.preferredWidth: 240
                 }
             }
 
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"textSize:"
+                    text: "textSize:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluSlider{
-                    id:slider_text_size
+                    id: slider_text_size
                     value: 20
                     from: 13
                     to:50
@@ -49,7 +48,7 @@ FluContentPage{
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"gapX:"
+                    text: "gapX:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluSlider{
@@ -60,18 +59,18 @@ FluContentPage{
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"gapY:"
+                    text: "gapY:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluSlider{
-                    id:slider_gap_y
+                    id: slider_gap_y
                     value: 100
                 }
             }
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"offsetX:"
+                    text: "offsetX:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluSlider{
@@ -82,22 +81,22 @@ FluContentPage{
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"offsetY:"
+                    text: "offsetY:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluSlider{
-                    id:slider_offset_y
+                    id: slider_offset_y
                     value: 50
                 }
             }
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"rotate:"
+                    text: "rotate:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluSlider{
-                    id:slider_rotate
+                    id: slider_rotate
                     value: 22
                     from: 0
                     to:360
@@ -106,23 +105,21 @@ FluContentPage{
             RowLayout{
                 spacing: 10
                 FluText{
-                    text:"textColor:"
+                    text: "textColor:"
                     Layout.alignment: Qt.AlignVCenter
                 }
                 FluColorPicker{
-                    id:color_picker
-                    Component.onCompleted: {
-                        setColor(Qt.rgba(0,0,0,0.1))
-                    }
+                    id: color_picker
+                    current: Qt.rgba(0,0,0,0.1)
                 }
             }
         }
 
         FluWatermark{
-            id:water_mark
+            id: water_mark
             anchors.fill: parent
             text:text_box.text
-            textColor: color_picker.colorValue
+            textColor: color_picker.current
             textSize: slider_text_size.value
             rotate: slider_rotate.value
             gap:Qt.point(slider_gap_x.value,slider_gap_y.value)

@@ -3,13 +3,12 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import FluentUI 1.0
 import example 1.0
-import "qrc:///example/qml/component"
 import "../component"
 
 FluWindow {
 
     id:window
-    title:"热加载"
+    title: qsTr("Hot Loader")
     width: 800
     height: 600
     minimumWidth: 520
@@ -21,12 +20,12 @@ FluWindow {
             loader.reload()
         }
     }
-    FluArea{
+    FluFrame{
         anchors.fill: parent
         FluRemoteLoader{
             id:loader
             anchors.fill: parent
-            statusMode: FluStatusViewType.Success
+            statusMode: FluStatusLayoutType.Success
             lazy: true
             errorItem: Item{
                 FluText{
@@ -41,10 +40,10 @@ FluWindow {
             }
         }
         FluText{
-            text:"拖入qml文件"
-            font.pixelSize: 26
+            text: qsTr("Drag in a qml file")
+            font: FluTextStyle.Title
             anchors.centerIn: parent
-            visible: !loader.itemLodaer().item && loader.statusMode === FluStatusViewType.Success
+            visible: !loader.itemLodaer().item && loader.statusMode === FluStatusLayoutType.Success
         }
         Rectangle{
             radius: 4
@@ -61,11 +60,11 @@ FluWindow {
                         event.accepted = false
                         return
                     }
-                    if (event.urls.length !== 1) {
+                    var url = getUrlByEvent(event)
+                    if(url === ""){
                         event.accepted = false
                         return
                     }
-                    var url = event.urls[0].toString()
                     var fileExtension = url.substring(url.lastIndexOf(".") + 1)
                     if (fileExtension !== "qml") {
                         event.accepted = false
@@ -75,12 +74,24 @@ FluWindow {
                 }
             onDropped:
                 (event)=>{
-                    var path = event.urls[0].toString()
-                    loader.source = path
-                    watcher.path = path
-                    loader.reload()
+                    var url = getUrlByEvent(event)
+                    if(url !== ""){
+                        loader.source = url
+                        watcher.path = url
+                        loader.reload()
+                    }
                 }
         }
+    }
+
+    function getUrlByEvent(event){
+        var url = ""
+        if (event.urls.length === 0) {
+            url = "file:///"+event.getDataAsString("text/plain")
+        }else{
+            url = event.urls[0].toString()
+        }
+        return url
     }
 
 }

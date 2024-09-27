@@ -6,28 +6,37 @@ import FluentUI 1.0
 FluObject{
 
     property var navigationView
+    property var paneItemMenu
 
     id:footer_items
 
     FluPaneItemSeparator{}
 
     FluPaneItem{
-        title:Lang.about
+        title:qsTr("About")
         icon:FluentIcons.Contact
-        onDropped: { FluApp.navigate("/about") }
         onTapListener:function(){
-            FluApp.navigate("/about")
+            FluRouter.navigate("/about")
         }
     }
 
     FluPaneItem{
-        title:Lang.settings
+        title:qsTr("Settings")
+        menuDelegate: paneItemMenu
         icon:FluentIcons.Settings
         url:"qrc:/example/qml/page/T_Settings.qml"
-        onDropped:{ FluApp.navigate("/pageWindow",{title:title,url:url}) }
         onTap:{
             navigationView.push(url)
         }
     }
 
+    FluPaneItem{
+        title:qsTr("FluentUI Pro")
+        menuDelegate: paneItemMenu
+        icon: FluentIcons.Airplane
+        url:"qrc:/example/qml/page/T_FluentPro.qml"
+        onTap:{
+            navigationView.push(url)
+        }
+    }
 }

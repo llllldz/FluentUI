@@ -2,25 +2,46 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import QtGraphicalEffects 1.0
-import "qrc:///example/qml/global"
 import FluentUI 1.0
+import "../window"
+import "../global"
 
 FluScrollablePage{
 
     launchMode: FluPageType.SingleTask
-    animDisabled: true
+    animationEnabled: false
+    header: Item{}
 
     ListModel{
-        id:model_header
+        id: model_header
         ListElement{
-            icon:"qrc:/example/res/image/ic_home_github.png"
-            title:"FluentUI GitHub"
-            desc:"The latest FluentUI controls and styles for your applications."
-            url:"https://github.com/zhuzichu520/FluentUI"
+            icon: "qrc:/example/res/image/logo_pro.png"
+            title: qsTr("FluentUI Pro")
+            desc: qsTr("The latest FluentUI Pro controls and styles for your applications.")
+            url: "https://github.com/zhuzichu520/FluentUI-Pro-Installer"
+            clicked: function(model){
+                Qt.openUrlExternally(model.url)
+            }
+        }
+        ListElement{
+            icon: "qrc:/example/res/image/ic_home_github.png"
+            title: qsTr("FluentUI GitHub")
+            desc: qsTr("The latest FluentUI controls and styles for your applications.")
+            url: "https://github.com/zhuzichu520/FluentUI"
+            clicked: function(model){
+                Qt.openUrlExternally(model.url)
+            }
+        }
+        ListElement{
+            icon: "qrc:/example/res/image/favicon.ico"
+            title: qsTr("FluentUI Initializr")
+            desc: qsTr("FluentUI Initializr is a Tool that helps you create and customize Fluent UI projects with various options.")
+            url: "https://github.com/zhuzichu520/FluentUI"
+            clicked: function(model){
+                fluent_Initializr.showDialog()
+            }
         }
     }
-
     Item{
         Layout.fillWidth: true
         Layout.preferredHeight: 320
@@ -28,7 +49,6 @@ FluScrollablePage{
             id: bg
             fillMode:Image.PreserveAspectCrop
             anchors.fill: parent
-            asynchronous: true
             verticalAlignment: Qt.AlignTop
             sourceSize: Qt.size(960,640)
             source: "qrc:/example/res/image/bg_home_header.png"
@@ -50,7 +70,6 @@ FluScrollablePage{
                 leftMargin: 20
             }
         }
-
         Component{
             id:com_grallery
             Item{
@@ -78,7 +97,7 @@ FluScrollablePage{
                     Rectangle{
                         anchors.fill: parent
                         radius: 5
-                        color:FluTheme.dark ? Qt.rgba(1,1,1,0.03) : Qt.rgba(0,0,0,0.03)
+                        color:FluTheme.itemHoverColor
                         visible: item_mouse.containsMouse
                     }
                     Rectangle{
@@ -108,6 +127,7 @@ FluScrollablePage{
                             Layout.leftMargin: 20
                             color: FluColors.Grey120
                             font.pixelSize: 12
+                            font.family: FluTextStyle.family
                             wrapMode: Text.WrapAnywhere
                         }
                     }
@@ -131,7 +151,7 @@ FluScrollablePage{
                                 else scrollbar_header.increase()
                             }
                         onClicked: {
-                            Qt.openUrlExternally(model.url)
+                            model.clicked(model)
                         }
                     }
                 }
@@ -161,10 +181,10 @@ FluScrollablePage{
     Component{
         id:com_item
         Item{
-            property string desc: modelData.desc
+            property string desc: modelData.extra.desc
             width: 320
             height: 120
-            FluArea{
+            FluFrame{
                 radius: 8
                 width: 300
                 height: 100
@@ -173,24 +193,17 @@ FluScrollablePage{
                     anchors.fill: parent
                     radius: 8
                     color:{
-                        if(FluTheme.dark){
-                            if(item_mouse.containsMouse){
-                                return Qt.rgba(1,1,1,0.03)
-                            }
-                            return Qt.rgba(0,0,0,0)
-                        }else{
-                            if(item_mouse.containsMouse){
-                                return Qt.rgba(0,0,0,0.03)
-                            }
-                            return Qt.rgba(0,0,0,0)
+                        if(item_mouse.containsMouse){
+                            return FluTheme.itemHoverColor
                         }
+                        return FluTheme.itemNormalColor
                     }
                 }
                 Image{
                     id:item_icon
                     height: 40
                     width: 40
-                    source: modelData.image
+                    source: modelData.extra.image
                     anchors{
                         left: parent.left
                         leftMargin: 20
@@ -228,7 +241,7 @@ FluScrollablePage{
                     height: 12
                     width: 12
                     radius:  6
-                    color: FluTheme.primaryColor.dark
+                    color: FluTheme.primaryColor
                     anchors{
                         right: parent.right
                         top: parent.top
@@ -284,3 +297,4 @@ FluScrollablePage{
     }
 
 }
+

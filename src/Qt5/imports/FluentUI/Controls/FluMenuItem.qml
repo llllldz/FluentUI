@@ -40,6 +40,7 @@ T.MenuItem {
     icon.height: 24
     icon.color: control.palette.windowText
     height: visible ? implicitHeight : 0
+    font:FluTextStyle.Body
     Component{
         id:com_icon
         FluIcon{
@@ -60,7 +61,7 @@ T.MenuItem {
                 right: parent.right
                 rightMargin: (control.mirrored ? indicatorPadding : arrowPadding)+5
             }
-            Loader{
+            FluLoader{
                 id:loader_icon
                 sourceComponent: iconDelegate
                 anchors.verticalCenter: parent.verticalCenter
@@ -69,6 +70,7 @@ T.MenuItem {
             FluText {
                 id:content_text
                 text: control.text
+                font: control.font
                 color: control.textColor
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -97,18 +99,11 @@ T.MenuItem {
             anchors.fill: parent
             anchors.margins: 3
             radius: 4
-            color:{
-                if(FluTheme.dark){
-                    if(control.highlighted){
-                        return Qt.rgba(1,1,1,0.06)
-                    }
-                    return Qt.rgba(0,0,0,0)
-                }else{
-                    if(control.highlighted){
-                        return Qt.rgba(0,0,0,0.06)
-                    }
-                    return Qt.rgba(0,0,0,0)
+            color: {
+                if(control.highlighted){
+                    return FluTheme.itemHoverColor
                 }
+                return FluTheme.itemNormalColor
             }
         }
     }

@@ -25,7 +25,7 @@ TextField{
     }
     font:FluTextStyle.Body
     renderType: FluTheme.nativeText ? Text.NativeRendering : Text.QtRendering
-    selectionColor: FluTools.colorAlpha(FluTheme.primaryColor.lightest,0.6)
+    selectionColor: FluTools.withOpacity(FluTheme.primaryColor,0.5)
     selectedTextColor: color
     placeholderTextColor: {
         if(!enabled){
@@ -37,10 +37,18 @@ TextField{
         return placeholderNormalColor
     }
     selectByMouse: true
-    rightPadding: icon_end.visible ? 66 : 40
+    rightPadding: {
+        var w = 30
+        if(control.cleanEnabled === false){
+            w = 0
+        }
+        if(control.readOnly)
+            w = 0
+        return icon_end.visible ? w+36 : w+10
+    }
+    width: 240
     background: FluTextBoxBackground{
         inputItem: control
-        implicitWidth: 240
     }
     Keys.onEnterPressed: (event)=> d.handleCommit(event)
     Keys.onReturnPressed:(event)=> d.handleCommit(event)
@@ -54,7 +62,15 @@ TextField{
         anchors.fill: parent
         cursorShape: Qt.IBeamCursor
         acceptedButtons: Qt.RightButton
-        onClicked: control.echoMode !== TextInput.Password && menu.popup()
+        onClicked: {
+            if(control.echoMode === TextInput.Password){
+                return
+            }
+            if(control.readOnly && control.text === ""){
+                return
+            }
+            menu_loader.popup()
+        }
     }
     RowLayout{
         height: parent.height
@@ -82,7 +98,7 @@ TextField{
             }
             contentDescription:"Clean"
             onClicked:{
-                control.text = ""
+                control.clear()
             }
         }
         FluIcon{
@@ -95,8 +111,22 @@ TextField{
             visible: control.iconSource != 0
         }
     }
-    FluTextBoxMenu{
+    FluLoader{
+        id: menu_loader
+        function popup(){
+            sourceComponent = menu
+        }
+    }
+    Component{
         id:menu
-        inputItem: control
+        FluTextBoxMenu{
+            inputItem: control
+            Component.onCompleted: {
+                popup()
+            }
+            onClosed: {
+                menu_loader.sourceComponent = undefined
+            }
+        }
     }
 }

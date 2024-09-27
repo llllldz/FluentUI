@@ -21,10 +21,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022]
+        os: [windows-latest]
         include:
           - qt_arch: win64_mingw
-            qt_ver: 6.5.0
+            qt_ver: 6.6.2
             qt_tools: "tools_mingw,9.0.0-1-202203221220,qt.tools.win64_mingw900"
             qt_tools_mingw_install: mingw900_64
     env:
@@ -47,7 +47,7 @@ jobs:
           version: ${{ matrix.qt_ver }}
           arch: ${{ matrix.qt_arch }}
           cache: ${{steps.cache-qt.outputs.cache-hit}}
-          modules: 'qt5compat qtmultimedia qtshadertools qtimageformats'
+          modules: 'qt5compat qtmultimedia qtshadertools qtimageformats qt3d'
       
       - name: Qt6 environment configuration
         if: ${{ startsWith( matrix.qt_ver, 6 ) }}
@@ -69,7 +69,7 @@ jobs:
           mkdir build
           cd build
           ninja --version
-          cmake -DCMAKE_MESSAGE_LOG_LEVEL=STATUS -DCMAKE_PREFIX_PATH=D:\a\FluentUI\Qt\6.5.0\mingw_64 -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release -GNinja ..
+          cmake -DCMAKE_MESSAGE_LOG_LEVEL=STATUS -DCMAKE_PREFIX_PATH=D:\a\FluentUI\Qt\${{ matrix.qt_ver }}\mingw_64 -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release -GNinja ..
           cmake --build . --target all --config Release --parallel
       
       - name: package
@@ -82,7 +82,7 @@ jobs:
            $name = ${env:archiveName}
            echo "::set-output name=packageName::$name"       
       
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.package.outputs.packageName }}
           path: dist
@@ -91,14 +91,14 @@ jobs:
         if: startsWith(github.event.ref, 'refs/tags/')
         uses: zhuzichu520/inno-setup-action@v1.0.1
         with:
-          filepath: ./action-cli/InstallerScript.iss
+          filepath: ./package/InstallerScript.iss
           
       - name: uploadRelease
         if: startsWith(github.event.ref, 'refs/tags/')
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./action-cli/installer.exe
+          file: ./package/installer.exe
           asset_name: ${{ env.fileName }}_${{ github.ref_name }}_${{ matrix.qt_arch }}_Qt${{ matrix.qt_ver }}.exe
           tag: ${{ github.ref }}
           overwrite: true
